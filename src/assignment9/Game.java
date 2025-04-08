@@ -6,17 +6,29 @@ import edu.princeton.cs.introcs.StdDraw;
 
 public class Game {
 	
+	Snake worm;
+	Food grub;
+	int score;
+	
 	public Game() {
 		StdDraw.enableDoubleBuffering();
+		worm = new Snake();
+		grub = new Food();
+		score = 0;
 		
-		//FIXME - construct new Snake and Food objects
 	}
 	
 	public void play() {
-		while (true) { //TODO: Update this condition to check if snake is in bounds
+		while (worm.isInbounds() && !worm.selfCollide()) { //TODO: Update this condition to check if snake is in bounds
 			int dir = getKeypress();
-			//Testing only: you will eventually need to do more work here
-			System.out.println("Keypress: " + dir);
+			worm.changeDirection(dir);
+			worm.move();
+			boolean eat = worm.eatFood(grub);
+			if(eat) {
+				grub = new Food();
+				score += 1;
+			}
+			updateDrawing();
 			
 			/*
 			 * 1. Pass direction to your snake
@@ -45,6 +57,12 @@ public class Game {
 	 * Clears the screen, draws the snake and food, pauses, and shows the content
 	 */
 	private void updateDrawing() {
+		StdDraw.clear();
+		worm.draw();
+		grub.draw();
+		StdDraw.text(.5, .9, "Score: " + score);
+		StdDraw.pause(50);
+		StdDraw.show();
 		//FIXME
 		
 		/*
